@@ -13,7 +13,6 @@ import {
   LogOut,
   ShoppingBag,
   User,
-  ChevronLeft,
 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
@@ -24,7 +23,6 @@ import {
 } from "@/components/ui/drawer";
 import { useCustomerAuthStore } from "@/store/useCustomerAuthStore";
 import { useBookingStore } from "@/store/useBookingStore";
-import { AnimatePresence, motion } from "framer-motion";
 import LoginForm from "./auth/LoginForm";
 import { CgMenuRight } from "react-icons/cg";
 import { FiInstagram } from "react-icons/fi";
@@ -63,10 +61,6 @@ export default function Navbar() {
   useEffect(() => setHasMounted(true), []);
   const isMobileQuery = useMediaQuery({ query: "(max-width: 767px)" });
   const isMobile = hasMounted ? isMobileQuery : false;
-  const currentStep = useBookingStore((s) => s.currentStep);
-  const prevStep = useBookingStore((s) => s.prevStep);
-  const confirmation = useBookingStore((s) => s.confirmation);
-  const showBackButton = pathname === "/" && !confirmation && currentStep > 1;
 
   const initials = user
     ? `${user.first_name[0] ?? ""}${user.last_name[0] ?? ""}`.toUpperCase()
@@ -78,54 +72,6 @@ export default function Navbar() {
         <div className='flex h-16 items-center justify-between gap-2 md:gap-3 lg:gap-5'>
           {/* Left: Logo + Nav */}
           <div className='flex min-w-0 flex-1 items-center gap-2 md:gap-2 lg:gap-3'>
-            <AnimatePresence initial={false}>
-              {showBackButton && (
-                <motion.div
-                  key='navbar-back'
-                  layout
-                  initial={{ width: 0, opacity: 0, x: -12, marginRight: -12 }}
-                  animate={{ width: 40, opacity: 1, x: 0, marginRight: 0 }}
-                  exit={{ width: 0, opacity: 0, x: -12, marginRight: -12 }}
-                  transition={{
-                    duration: 0.32,
-                    ease: [0.32, 0.72, 0, 1],
-                  }}
-                  className='overflow-hidden md:hidden shrink-0'>
-                  <motion.button
-                    type='button'
-                    onClick={() => {
-                      prevStep();
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
-                    aria-label='Go back to previous step'
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.8 }}
-                    transition={{
-                      duration: 0.32,
-                      ease: [0.32, 0.72, 0, 1],
-                    }}
-                    className='flex size-10 items-center justify-center rounded-full border border-[#EDE3D3] bg-white text-[#3A2A22] shadow-sm transition-colors hover:bg-[#FDF9F5] active:bg-[#EDE3D3]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A57865]/40'>
-                    <ChevronLeft size={20} className='shrink-0' />
-                  </motion.button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence initial={false}>
-              {showBackButton && (
-                <motion.div
-                  key='navbar-divider'
-                  initial={{ opacity: 0, scaleY: 0.4 }}
-                  animate={{ opacity: 1, scaleY: 1 }}
-                  exit={{ opacity: 0, scaleY: 0.4 }}
-                  transition={{ duration: 0.22, ease: [0.32, 0.72, 0, 1] }}
-                  aria-hidden='true'
-                  className='h-6 w-px shrink-0 origin-center bg-[#EDE3D3] md:hidden'
-                />
-              )}
-            </AnimatePresence>
-
             <Link
               href='/'
               className='flex shrink-0 items-center gap-2.5 rounded-md p-1 -m-1 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#A57865]/40'>
@@ -213,7 +159,7 @@ export default function Navbar() {
             {token && user ? (
               <div className='hidden items-center gap-2 md:flex lg:gap-3'>
                 <div className='flex items-center gap-1.5 md:gap-2 rounded-full border border-[#EDE3D3] bg-white px-2 py-1.5 shadow-sm shadow-black/[0.03]'>
-                  <div className='flex size-7 items-center justify-center rounded-full bg-gradient-to-br from-[#A57865] to-[#8B5E4D] font-plus-jakarta-sans text-[11px] font-semibold text-white'>
+                  <div className='flex size-7 items-center justify-center rounded-full bg-gradient-to-r from-black/90 to-black/80 font-plus-jakarta-sans text-[11px] font-semibold text-white'>
                     {initials || <User size={14} />}
                   </div>
                   <span className='hidden pr-1 font-plus-jakarta-sans text-[13px] font-medium text-[#3A2A22] lg:inline'>
@@ -236,7 +182,7 @@ export default function Navbar() {
                   setAuthMode("login");
                   setAuthOpen(true);
                 }}
-                className='hidden rounded-full bg-gradient-to-b from-[#A57865] to-[#8B5E4D] px-4 py-2 md:px-5 md:py-2.5 font-plus-jakarta-sans text-[13px] lg:text-sm font-medium tracking-[0.02em] text-white shadow-sm shadow-[#8B5E4D]/25 transition-transform duration-200 hover:brightness-105 active:scale-[0.98] md:inline-flex'>
+                className='hidden rounded-full bg-gradient-to-r from-black/90 to-black/80 px-4 py-2 md:px-5 md:py-2.5 font-plus-jakarta-sans text-[13px] lg:text-sm font-medium tracking-[0.02em] text-white shadow-sm shadow-[#8B5E4D]/25 transition-transform duration-200 hover:brightness-105 active:scale-[0.98] md:inline-flex'>
                 Sign in
               </button>
             )}
@@ -368,7 +314,7 @@ export default function Navbar() {
                     setAuthMode("login");
                     setTimeout(() => setAuthOpen(true), 200);
                   }}
-                  className='rounded-full bg-gradient-to-b from-[#A57865] to-[#8B5E4D] py-3 font-plus-jakarta-sans text-sm font-medium text-white shadow-sm shadow-[#8B5E4D]/25'>
+                  className='rounded-full bg-gradient-to-r from-black/90 to-black/80 py-3 font-plus-jakarta-sans text-sm font-medium text-white shadow-sm shadow-black/25'>
                   Sign in
                 </button>
                 <button

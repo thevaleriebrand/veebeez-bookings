@@ -152,7 +152,7 @@ export default function ServiceCard({
           <div>
             <h4
               className={cn(
-                "font-plus-jakarta-sans tracking-tight text-base font-normal transition-colors duration-200 flex-1 pr-1",
+                "font-plus-jakarta-sans tracking-tight text-base font-medium transition-colors duration-200 flex-1 pr-1",
                 isInCart
                   ? "text-neutral-900"
                   : "text-neutral-700 group-hover:text-[#3a2520]",
@@ -221,7 +221,7 @@ export default function ServiceCard({
         />
       </div>
 
-      {detailsOpen && (openAsDesktop ?? isDesktop) && (
+      {openAsDesktop === true && detailsOpen && (
         <ServiceDetailsDialog
           service={service}
           context={context}
@@ -237,19 +237,17 @@ export default function ServiceCard({
           }}
         />
       )}
-      {detailsOpen && !(openAsDesktop ?? isDesktop) && (
+
+      {openAsDesktop === false && (
         <ServiceDetailsDrawer
           service={service}
           context={context}
           open={detailsOpen}
-          onClose={() => {
-            setDetailsOpen(false);
-            setOpenAsDesktop(null);
-          }}
+          onClose={() => setDetailsOpen(false)}
+          onExitComplete={() => setOpenAsDesktop(null)}
           onConfirm={(item) => {
             addToCart(item);
             setDetailsOpen(false);
-            setOpenAsDesktop(null);
           }}
         />
       )}
